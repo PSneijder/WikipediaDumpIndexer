@@ -11,7 +11,7 @@
       <Output TaskParameter="Dependencies" ItemName="IndirectDependenciesToCopy" />
     </ScanDependencies>
 
-    <Copy SourceFiles="%(IndirectDependenciesToCopy.FullPath)" DestinationFolder="$(BinariesOutput)" />
+    <Copy SourceFiles="%(IndirectDependenciesToCopy.FullPath)" DestinationFolder="$(BinariesOutput)" SkipUnchangedFiles="True" />
     
   </Target>
   
