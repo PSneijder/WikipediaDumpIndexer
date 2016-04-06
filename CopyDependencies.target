@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <PropertyGroup>
+    <BinariesOutput>$(OutputPath)\Binaries</BinariesOutput>
+  </PropertyGroup>
+
+  <Target Name="CopyDependencies" AfterTargets="Build">
+
+    <ScanDependencies Project="$(MSBuildProjectFullPath)" OutputPath="$(OutputPath)">
+      <Output TaskParameter="Dependencies" ItemName="IndirectDependenciesToCopy" />
+    </ScanDependencies>
+
+    <Copy SourceFiles="%(IndirectDependenciesToCopy.FullPath)" DestinationFolder="$(BinariesOutput)" />
+    
+  </Target>
+  
+  <UsingTask TaskName="ScanDependencies" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
+    <ParameterGroup>
+      <Project Required="true" />
+      <OutputPath Required="true" />
+      <Dependencies ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System.Xml"/>
+      <Using Namespace="Microsoft.Build.Framework" />
+      <Using Namespace="Microsoft.Build.Utilities" />
+      <Using Namespace="System" />
+      <Using Namespace="System.Collections.Generic" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Linq" />
+      <Using Namespace="System.Xml" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+        
+            var outputMap = new List<string>();
+            var referenceMap = new HashSet<string>();
+            
+            var queue = new Queue<string>();
+            queue.Enqueue(Project);
+
+            while (queue.Count > 0)
+            {
+                var project = queue.Dequeue();
+                Log.LogMessage(MessageImportance.High, project);
+
+                if (!project.EndsWith(".csproj"))
+                    continue;
+                
+                var doc = new XmlDocument();
+                doc.Load(project);
+
+                var nsmgr = new XmlNamespaceManager(doc.NameTable);
+                nsmgr.AddNamespace("msb", "http://schemas.microsoft.com/developer/msbuild/2003");
+
+                var projectDirectory = Path.GetDirectoryName(project);
+
+                var projectReferences = doc
+                    .SelectNodes("/msb:Project/msb:ItemGroup/msb:ProjectReference/@Include", nsmgr)
+                    .Cast<XmlAttribute>().Select(a => Path.GetFullPath(projectDirectory + "\\" + a.Value.Trim()));
+
+                var references = doc
+                    .SelectNodes("/msb:Project/msb:ItemGroup/msb:Reference/msb:HintPath", nsmgr)
+                    .Cast<XmlElement>().Select(a => Path.GetFullPath(projectDirectory + "\\" + a.InnerText.Trim()));
+
+                foreach (var projectReference in projectReferences)
+                {
+                    if (!referenceMap.Contains(projectReference))
+                    {
+                        referenceMap.Add(projectReference);
+
+                        queue.Enqueue(projectReference);
+                    }
+
+                    var referenceDoc = new XmlDocument();
+                    referenceDoc.Load(projectReference);
+
+                    var referenceNsmgr = new XmlNamespaceManager(doc.NameTable);
+                    referenceNsmgr.AddNamespace("msb", "http://schemas.microsoft.com/developer/msbuild/2003");
+
+                    var assemblyDirectory = Path.GetDirectoryName(projectReference);
+                    var assemblyName = referenceDoc.SelectSingleNode("/msb:Project/msb:PropertyGroup/msb:AssemblyName", nsmgr).InnerText.Trim() + ".dll";
+                    var assembly = Path.GetFullPath(Path.Combine(assemblyDirectory, OutputPath, assemblyName));
+
+                    // Add to output list
+                    if (!outputMap.Contains(assembly))
+                    {
+                        Log.LogMessage(MessageImportance.Low, "Adding to ouput: " + assembly);
+                        outputMap.Add(assembly);
+                    }
+                }
+                
+                foreach (var reference in references)
+                {
+                    // Add to output list
+                    if (!outputMap.Contains(reference))
+                    {
+                        Log.LogMessage(MessageImportance.Low, "Adding to ouput: " + reference);
+                        outputMap.Add(reference);
+                    }
+                }
+            }
+            
+            var xml = outputMap.Select(f => Path.Combine(Path.GetDirectoryName(f), Path.GetFileNameWithoutExtension(f) + ".xml")).Where(f => File.Exists(f)).ToArray();
+            var pdb = outputMap.Select(f => Path.Combine(Path.GetDirectoryName(f), Path.GetFileNameWithoutExtension(f) + ".pdb")).Where(f => File.Exists(f)).ToArray();
+            outputMap.AddRange(xml);
+            outputMap.AddRange(pdb);
+        
+            Dependencies = outputMap.Select(o => new TaskItem(o)).ToArray();
+      ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+</Project>
