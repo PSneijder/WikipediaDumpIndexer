@@ -2,7 +2,7 @@
 
 namespace WikipediaDumpIndexer.Core.Extensions
 {
-    internal static class FsDirectoryExtensions
+    static class FsDirectoryExtensions
     {
         public static void ToFileStream(this RAMDirectory directory, string path)
         {

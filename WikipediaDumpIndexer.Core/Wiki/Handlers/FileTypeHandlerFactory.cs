@@ -4,7 +4,7 @@ using System.Net;
 
 namespace WikipediaDumpIndexer.Core.Wiki.Handlers
 {
-    internal static class FileTypeHandlerFactory
+    static class FileTypeHandlerFactory
     {
         public static void Handle(Uri fileName, Action<Stream> parse)
         {

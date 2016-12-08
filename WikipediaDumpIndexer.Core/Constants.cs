@@ -3,7 +3,7 @@ using Lucene.Net.Util;
 
 namespace WikipediaDumpIndexer.Core
 {
-    internal enum FileExtensions
+    enum FileExtensions
     {
         [Description(".XML")]
         Xml = 0,
@@ -13,7 +13,7 @@ namespace WikipediaDumpIndexer.Core
         Bz2 = 2
     }
 
-    internal static class Constants
+    static class Constants
     {
         internal static int DocumentThreshold = 1000;
         internal static Version Version = Version.LUCENE_30;

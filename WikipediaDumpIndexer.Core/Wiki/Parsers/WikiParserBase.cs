@@ -2,7 +2,7 @@
 
 namespace WikipediaDumpIndexer.Core.Wiki.Parsers
 {
-    internal abstract class WikiParserBase
+    abstract class WikiParserBase
         : IDisposable
     {
         protected Uri FileName = null;

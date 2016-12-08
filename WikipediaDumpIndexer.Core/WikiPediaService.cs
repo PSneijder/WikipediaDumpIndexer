@@ -44,9 +44,9 @@ namespace WikipediaDumpIndexer.Core
                 });
         }
 
-        public static IEnumerable<Tuple<string, float>> Search(string searchText)
+        public static IEnumerable<Tuple<string, float, string[]>> Search(string searchText)
         {
-            var items = new List<Tuple<string, float>>();
+            var items = new List<Tuple<string, float, string[]>>();
 
             using (var searcher = Kernel.Get<Searcher>())
             {
@@ -54,7 +54,7 @@ namespace WikipediaDumpIndexer.Core
 
                 items.AddRange(from result in results
                                     let flattend = string.Join(" ", result.Item2.GetFields().Select(field => field.StringValue))
-                                        select Tuple.Create(flattend, result.Item1));
+                                        select Tuple.Create(flattend, result.Item1, result.Item3));
             }
 
             return items;

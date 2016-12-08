@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace WikipediaDumpIndexer.Core.Lucene
 {
-    public interface IIndexer 
+    interface IIndexer 
         : IDisposable
     {
         void Index(IEnumerable<Field> fields);

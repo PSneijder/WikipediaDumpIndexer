@@ -5,7 +5,7 @@ namespace WikipediaDumpIndexer.Core.Wiki.Parsers
     /// <summary>
     /// Data structures for a wikipedia page.
     /// </summary>
-    internal sealed class WikiPage
+    sealed class WikiPage
     {
         private WikiTextParser _wikiTextParser;
         private string _title;

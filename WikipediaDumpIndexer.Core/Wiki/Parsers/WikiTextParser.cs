@@ -8,7 +8,7 @@ namespace WikipediaDumpIndexer.Core.Wiki.Parsers
     ///     For internal use only -- Used by the {@link WikiPage} class.
     ///     Can also be used as a stand alone class to parse wiki formatted text.
     /// </summary>
-    internal sealed class WikiTextParser
+    sealed class WikiTextParser
     {
         private static readonly Regex StubPattern = new Regex("\\-stub\\}\\}");
         private static readonly Regex DisambCatPattern = new Regex("\\{\\{[Dd]isambig(uation)?\\}\\}"); // the first letter of pages is case-insensitive

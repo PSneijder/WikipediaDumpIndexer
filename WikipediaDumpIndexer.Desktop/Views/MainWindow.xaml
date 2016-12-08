@@ -4,18 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mahApps="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Icon="../Resources/Wikipedia.ico"
-        Title="WikipediaDumpIndexer" Height="600" Width="600">
+        Title="WikipediaDumpIndexer" Height="600" Width="600"
+        ResizeMode="CanResizeWithGrip">
 
     <mahApps:MetroWindow.Resources>
         <DataTemplate x:Key="SearchResultItemTemplate">
             <HeaderedContentControl>
                 <HeaderedContentControl.Header>
-                    <Label Content="{Binding Path=Item2}" Background="LightBlue" />
+                    <ListBox ItemsSource="{Binding Path=Item3}" Background="LightBlue" />
                 </HeaderedContentControl.Header>
                 <HeaderedContentControl.Content>
-                    <Label Content="{Binding Path=Item1}" />
+                    <Expander Header="{Binding Path=Item2}">
+                        <Label Content="{Binding Path=Item1}" />
+                    </Expander>
                 </HeaderedContentControl.Content>
             </HeaderedContentControl>
         </DataTemplate>
@@ -35,7 +39,7 @@
         <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding Path=SearchText}" Margin="5" />
         <Button Grid.Row="0" Grid.Column="1" Content="Search" Command="{Binding Path=SearchCommand}" Margin="5" />
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.ColumnSpan="2">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
             <ItemsControl ItemsSource="{Binding Path=SearchResults}"
                           ItemTemplate="{StaticResource SearchResultItemTemplate}" Margin="5" />
         </ScrollViewer>

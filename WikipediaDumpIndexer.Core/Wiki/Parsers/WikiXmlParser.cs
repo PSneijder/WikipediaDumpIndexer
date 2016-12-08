@@ -8,7 +8,7 @@ using WikipediaDumpIndexer.Core.Wiki.Handlers;
 
 namespace WikipediaDumpIndexer.Core.Wiki.Parsers
 {
-    internal sealed class WikiXmlParser
+    sealed class WikiXmlParser
        : WikiParserBase
     {
         private readonly Indexer _indexer;

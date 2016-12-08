@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace WikipediaDumpIndexer.Core.Wiki.Handlers
 {
-    internal sealed class DataFlow
+    sealed class DataFlow
         : IDisposable
     {
         private readonly XmlReader _reader;

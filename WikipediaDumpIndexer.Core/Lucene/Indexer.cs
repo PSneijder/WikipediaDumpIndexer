@@ -8,7 +8,7 @@ using System.Configuration;
 
 namespace WikipediaDumpIndexer.Core.Lucene
 {
-    internal sealed class Indexer
+    sealed class Indexer
         : IIndexer
     {
         private long _counter;

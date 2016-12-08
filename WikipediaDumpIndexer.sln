@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WikipediaDumpIndexer.Core", "WikipediaDumpIndexer.Core\WikipediaDumpIndexer.Core.csproj", "{3B434AB6-9D61-4C8D-BCAF-E7A648CFC731}"
 EndProject
@@ -15,6 +15,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WikipediaDumpIndexer.Desktop", "WikipediaDumpIndexer.Desktop\WikipediaDumpIndexer.Desktop.csproj", "{A0B07884-4DEB-4882-8DF5-CA4E9EBFC355}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CopyDependencies", "CopyDependencies\CopyDependencies.csproj", "{A0E0FAAE-2133-4995-98FB-7A7F8A7D6057}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{F3AD9508-FF5B-42F4-B5CA-FC5A7AC1726A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{DBBF3CD1-DE6C-416F-9D3D-4A5EB7C41957}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +65,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{3B434AB6-9D61-4C8D-BCAF-E7A648CFC731} = {F3AD9508-FF5B-42F4-B5CA-FC5A7AC1726A}
+		{F6F750B8-F4DD-4F71-B23B-EA05FDA8A62C} = {DBBF3CD1-DE6C-416F-9D3D-4A5EB7C41957}
+		{A0B07884-4DEB-4882-8DF5-CA4E9EBFC355} = {DBBF3CD1-DE6C-416F-9D3D-4A5EB7C41957}
 		{A0E0FAAE-2133-4995-98FB-7A7F8A7D6057} = {C325EFA7-F722-403D-A905-50A80B8BBD48}
 	EndGlobalSection
 EndGlobal

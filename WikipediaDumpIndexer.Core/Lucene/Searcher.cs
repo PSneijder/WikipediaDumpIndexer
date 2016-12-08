@@ -12,8 +12,8 @@ using Lucene.Net.Search.Highlight;
 
 namespace WikipediaDumpIndexer.Core.Lucene
 {
-    internal sealed class Searcher
-            : IDisposable
+    sealed class Searcher
+        : IDisposable
     {
         private const bool ReadonlyMode = true;
         private readonly Analyzer _analyzer = new StandardAnalyzer(Constants.Version);
@@ -28,42 +28,32 @@ namespace WikipediaDumpIndexer.Core.Lucene
             _recreateIfExists = recreateIfExists;
         }
 
-        private FSDirectory Directory
-        {
-            get {
-                return _indexDirectory ??
-                       (_indexDirectory = FSDirectory.Open(new DirectoryInfo(_path), new NoLockFactory()));
-            }
-        }
-
-        public long Count()
-        {
-            using (var reader = IndexReader.Open(Directory, ReadonlyMode))
-            {
-                return reader.NumDocs();
-            }
-        }
-
-        public Indexer GetIndexer()
-        {
-            return new Indexer(Directory, _analyzer, _recreateIfExists);
-        }
-
-        public IEnumerable<Tuple<float, Document>> Search(string text, string defaultField = "title", int maxResultCount = 500)
+        public IEnumerable<Tuple<float, Document, string[]>> Search(string text, string defaultField = "title", int maxResultCount = 500)
         {
             var parser = new QueryParser(Constants.Version, defaultField, _analyzer);
-            var query = parser.Parse(text);
+            Query query = parser.Parse(text ?? string.Empty);
 
-            Directory.EnsureOpen();
+            var formatter = new SimpleHTMLFormatter(string.Empty, string.Empty);
+            var fragmenter = new SimpleFragmenter(120);
+            var scorer = new QueryScorer(query);
+            var highlighter = new Highlighter(formatter, scorer) { TextFragmenter = fragmenter };
 
-            using (var searcher = new IndexSearcher(IndexReader.Open(Directory, ReadonlyMode)))
+            using (var directory = FSDirectory.Open(new DirectoryInfo(_path), new NoLockFactory()))
             {
-                var hits = searcher.Search(query, maxResultCount);
-
-                foreach (var scoreDoc in hits.ScoreDocs)
+                using (var searcher = new IndexSearcher(IndexReader.Open(directory, ReadonlyMode)))
                 {
-                    var doc = searcher.Doc(scoreDoc.Doc);
-                    yield return new Tuple<float, Document>(scoreDoc.Score, doc);
+                    TopDocs hits = searcher.Search(query, maxResultCount);
+
+                    foreach (var scoreDoc in hits.ScoreDocs)
+                    {
+                        Document doc = searcher.Doc(scoreDoc.Doc);
+
+                        var field = doc.Get(defaultField);
+                        var tokenStream = _analyzer.TokenStream(defaultField, new StringReader(field));
+                        var framgents = highlighter.GetBestFragments(tokenStream, field, 5);
+
+                        yield return new Tuple<float, Document, string[]>(scoreDoc.Score, doc, framgents);
+                    }
                 }
             }
         }
@@ -76,7 +66,7 @@ namespace WikipediaDumpIndexer.Core.Lucene
         public void Dispose()
         {
             if (_indexDirectory != null)
-            { 
+            {
                 _indexDirectory.Dispose();
             }
         }

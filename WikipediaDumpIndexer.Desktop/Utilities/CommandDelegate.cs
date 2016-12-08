@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace WikipediaDumpIndexer.Desktop.Utilities
 {
-    internal sealed class DelegateCommand
+    sealed class DelegateCommand
         : ICommand
     {
         private readonly Action _execute;
@@ -34,7 +34,7 @@ namespace WikipediaDumpIndexer.Desktop.Utilities
         }
     }
 
-    internal sealed class DelegateCommand<T>
+    sealed class DelegateCommand<T>
         : ICommand
         where T : class
     {
