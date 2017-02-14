@@ -1,5 +1,8 @@
 # WikipediaDumpIndexer
 
+![](https://img.shields.io/badge/.net-v4.5.2-blue.svg)
+![](https://img.shields.io/badge/build-passing-green.svg)
+
 ![alt tag](https://github.com/PSneijder/WikipediaDumpIndexer/blob/master/Assets/WikipediaDumpIndexer.png)
 
 The project uses the German Wikipedia as source of documents for several purposes: as training data and as source of data to be annotated.
@@ -10,17 +13,17 @@ The WikipediaDumpIndexer tool generates plain text from a Wikipedia database dum
 
 ![alt tag](https://github.com/PSneijder/WikipediaDumpIndexer/blob/master/Assets/CodeMap.png)
 
-# TODOs
+## TODOs
 * Indexing wikipedia contents in a more meaningful manner.
 * <strike>xml parsing of wikipedia dumps</strike>
 * <strike>bz parsing of wikipedia dumps</strike>
 * <strike>bz2 parsing of wikipedia dumps</strike>
 
-# Recent Changes
+## Recent Changes
 See [CHANGES.txt](CHANGES.txt)
 
-# Committers
+## Committers
 * [Philip Schneider](https://github.com/PSneijder)
 
-# Licensing
+## Licensing
 The license for the code is [ALv2](http://www.apache.org/licenses/LICENSE-2.0.html).
